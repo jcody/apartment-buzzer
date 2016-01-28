@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<Response>
-    <Say voice="woman">Forwarding your call to Joey's cell phone.</Say>
-    <Dial action="/forward?Dial=true" timeout="20">@phone_number</Dial>
-    <Record maxLength="20" />
-</Response>
