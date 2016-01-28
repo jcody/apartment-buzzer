@@ -18,6 +18,7 @@ module ApartmentBuzzer
       content_type 'text/xml'
       "<?xml version='1.0' encoding='UTF-8'?>
       <Response>
+        <Say voice='woman'>Welcome to the Bungalow, BRO!</Say>
         <Dial callerId='14157499353'>#{@phone_number}</Dial>
       </Response>"
 
