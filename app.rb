@@ -33,7 +33,7 @@ module ApartmentBuzzer
       "<?xml version='1.0' encoding='UTF-8'?>
       <Response>
         <Say voice='woman'>Forwarding your call to Joey's cell phone.</Say>
-        <Dial timeout='20' callerID='+14157499353'>#{@phone_number}</Dial>
+        <Dial callerId='14157499353'>#{@phone_number}</Dial>
       </Response>"
 
     end
