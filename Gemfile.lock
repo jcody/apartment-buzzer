@@ -1,10 +1,13 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    builder (3.1.4)
     daemons (1.2.3)
     dotenv (2.1.0)
     eventmachine (1.0.9.1)
+    jwt (1.5.1)
     kgio (2.10.0)
+    multi_json (1.11.2)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -19,6 +22,10 @@ GEM
       eventmachine (~> 1.0, >= 1.0.4)
       rack (~> 1.0)
     tilt (2.0.2)
+    twilio-ruby (3.6.0)
+      builder (>= 2.1.2)
+      jwt (>= 0.1.2)
+      multi_json (>= 1.0.3)
     unicorn (5.0.1)
       kgio (~> 2.6)
       rack
@@ -32,6 +39,7 @@ DEPENDENCIES
   rake
   sinatra
   thin
+  twilio-ruby
   unicorn
 
 BUNDLED WITH

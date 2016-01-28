@@ -19,6 +19,12 @@ Dir['lib/**/*.rb'].sort.each { |file| require file }
 
 module ApartmentBuzzer
   class App < Sinatra::Application
+    # configure do
+    #   Twilio.configure do |config|
+    #     config.account_sid = ENV['TWILIO_ACCOUNT_SID']
+    #     config.auth_token = ENV['TWILIO_AUTH_TOKEN']
+    #   end
+    # end
 
     get "/buzzer" do
       @phone_number = params[:phone_number]
@@ -27,7 +33,7 @@ module ApartmentBuzzer
       "<?xml version='1.0' encoding='UTF-8'?>
       <Response>
         <Say voice='woman'>Forwarding your call to Joey's cell phone.</Say>
-        <Dial action='/forward?Dial=true' timeout='20'>#{@phone_number}</Dial>
+        <Dial>#{@phone_number}</Dial>
       </Response>"
 
     end
