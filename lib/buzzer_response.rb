@@ -19,12 +19,17 @@ class BuzzerResponse
     ENV["TWILIO_PHONE_NUMBER"]
   end
 
+  def resident_number
+    ENV["RESIDENT_PHONE_NUMBER"]
+  end
+
   private
 
   def default_response
     <<-EOS
     <Response>
       <Say voice='man' language='en'></Say>
+      <Sms from='#{caller_id_number}' to='#{resident_number}'>Guest arrived @ 1761 Vallejo St.</Sms>
       <Play digits='9'></Play>
       <Hangup/>
     </Response>
