@@ -24,8 +24,9 @@ class BuzzerResponse
   def default_response
     <<-EOS
     <Response>
-      <Say voice='man' language='en-gb'>Welcome home old chap!</Say>
+      <Say voice='man' language='en'></Say>
       <Play digits='9'></Play>
+      <Hangup/>
     </Response>
     EOS
   end

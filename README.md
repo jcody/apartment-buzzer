@@ -9,3 +9,11 @@ $ bundle install
 $ heroku create
 $ git push heroku master
 ```
+
+### Landlord Home
+Toggle to forward call directly to your cell phone if your landlord will be testing the buzzer. If set to false, it will automagically let your guests in.
+
+Set with [heroku config vars](https://devcenter.heroku.com/articles/config-vars):
+```sh
+heroku config:set LANDLORD_HOME=false
+```
