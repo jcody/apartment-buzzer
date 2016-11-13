@@ -4,7 +4,7 @@ Programmatically let guests into your apartment building without having to answe
 ### Setup
 Copy `.env.sample` to `.env`, adding your own [Twilio phone number](https://www.twilio.com/help/faq/phone-numbers) and API credentials.
 
-```sh
+```shell
 $ bundle install
 $ heroku create
 $ git push heroku master
@@ -14,6 +14,7 @@ $ git push heroku master
 Toggle to forward call directly to your cell phone if your landlord will be testing the buzzer. If set to false, it will automagically let your guests in.
 
 Set with [heroku config vars](https://devcenter.heroku.com/articles/config-vars):
-```sh
+```shell
 heroku config:set LANDLORD_HOME=false
 ```
+Alternatively, setting `LANDLORD_HOME=true` will forward the buzzer call to the number set in the `RESIDENT_PHONE_NUMBER` environment variable.
