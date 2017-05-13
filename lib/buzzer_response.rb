@@ -1,8 +1,6 @@
 class BuzzerResponse
-  attr_accessor :params
-
-  def initialize(params)
-    @params = params
+  def initialize
+    # Used to be a nice voice data object, now everything is crammed into this lib class.
   end
 
   def generate
