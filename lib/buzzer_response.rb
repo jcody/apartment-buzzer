@@ -1,8 +1,8 @@
 class BuzzerResponse
-  attr_accessor :phone_number
+  attr_accessor :params
 
-  def initialize(phone_number)
-    @phone_number = phone_number
+  def initialize(params)
+    @params = params
   end
 
   def generate
@@ -11,11 +11,29 @@ class BuzzerResponse
     default_response
   end
 
+  def toggle_landlord
+    TwilioAPI.toggle_landlord_home!
+
+    toggle_landlord_response
+  end
+
+  def lol_response
+    <<-EOS
+    <Response>
+      <Sms from='#{twilio_virtual_number}' to='#{resident_number}'>
+        Suhhh dude 🤙?!
+      </Sms>
+    </Response>
+    EOS
+  end
+
+  private
+
   def landlord_home?
     ENV["LANDLORD_HOME"] == "true"
   end
 
-  def caller_id_number
+  def twilio_virtual_number
     ENV["TWILIO_PHONE_NUMBER"]
   end
 
@@ -23,13 +41,11 @@ class BuzzerResponse
     ENV["RESIDENT_PHONE_NUMBER"]
   end
 
-  private
-
   def default_response
     <<-EOS
     <Response>
       <Say voice='man' language='en'></Say>
-      <Sms from='#{caller_id_number}' to='#{resident_number}'>Guest arrived @ 1761 Vallejo St.</Sms>
+      <Sms from='#{twilio_virtual_number}' to='#{resident_number}'>Guest arrived @ 1761 Vallejo St.</Sms>
       <Play digits='9'></Play>
       <Hangup/>
     </Response>
@@ -39,8 +55,26 @@ class BuzzerResponse
   def landlord_home_response
     <<-EOS
     <Response>
-      <Dial callerId='#{caller_id_number}'>#{phone_number}</Dial>
+      <Dial callerId='#{twilio_virtual_number}'>#{resident_number}</Dial>
     </Response>
     EOS
+  end
+
+  def toggle_landlord_response
+    <<-EOS
+    <Response>
+      <Sms from='#{twilio_virtual_number}' to='#{resident_number}'>#{toggle_landlord_success_message}</Sms>
+    </Response>
+    EOS
+  end
+
+  def toggle_landlord_success_message
+    if landlord_home?
+      msg = "You will get forwarded calls to let guests in."
+    else
+      msg = "Guests will automagically be let in! You will be texted when they arrive."
+    end
+
+    "Switched landlord home! #{msg}"
   end
 end
