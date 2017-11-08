@@ -14,6 +14,8 @@ module ApartmentBuzzer
   class App < Sinatra::Application
 
     get "/buzzer" do
+      puts "GET /buzzer request made."
+
       content_type "text/xml"
       BuzzerResponse.new(params[:phone_number]).generate
     end

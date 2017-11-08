@@ -6,6 +6,7 @@ class BuzzerResponse
   end
 
   def generate
+    puts "Landlord home/should dial user: #{landlord_home?}"
     return landlord_home_response if landlord_home?
 
     default_response
