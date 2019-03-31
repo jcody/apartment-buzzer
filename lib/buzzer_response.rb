@@ -26,12 +26,16 @@ class BuzzerResponse
 
   private
 
+  def current_time
+    DateTime.now.strftime("%-l:%M %P")
+  end
+
   def default_response
     <<-EOS
     <Response>
       <Say voice='man' language='en'></Say>
-      <Sms from='#{caller_id_number}' to='#{resident_number}'>Guest arrived @ 1761 Vallejo St.</Sms>
-      <Play digits='9'></Play>
+      <Sms from='#{caller_id_number}' to='#{resident_number}'>Guest arrived @ 1761 Vallejo St - #{current_time}.</Sms>
+      <Play digits='9' loop='2'></Play>
       <Hangup/>
     </Response>
     EOS
