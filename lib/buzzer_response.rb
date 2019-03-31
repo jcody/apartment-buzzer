@@ -27,7 +27,7 @@ class BuzzerResponse
   private
 
   def current_time
-    DateTime.now.strftime("%-l:%M %P")
+    DateTime.now.new_offset("PDT").strftime("%-l:%M %P")
   end
 
   def default_response
@@ -35,7 +35,7 @@ class BuzzerResponse
     <Response>
       <Say voice='man' language='en'></Say>
       <Sms from='#{caller_id_number}' to='#{resident_number}'>Guest arrived @ 1761 Vallejo St - #{current_time}.</Sms>
-      <Play digits='9' loop='2'></Play>
+      <Play digits='9'></Play>
       <Hangup/>
     </Response>
     EOS
