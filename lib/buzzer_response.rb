@@ -34,7 +34,7 @@ class BuzzerResponse
     <<-EOS
     <Response>
       <Say voice='man' language='en'></Say>
-      <Sms from='#{caller_id_number}' to='#{resident_number}'>Guest arrived @ 1761 Vallejo St - #{current_time}.</Sms>
+      <Sms from='#{caller_id_number}' to='#{resident_number}'>👋 1761 Vallejo St - [#{current_time}]</Sms>
       <Play digits='9'></Play>
       <Hangup/>
     </Response>
