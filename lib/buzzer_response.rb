@@ -27,7 +27,7 @@ class BuzzerResponse
   private
 
   def current_time
-    DateTime.now.new_offset("PDT").strftime("%-l:%M %P")
+    DateTime.now.new_offset("PST").strftime("%-l:%M %P")
   end
 
   def default_response
