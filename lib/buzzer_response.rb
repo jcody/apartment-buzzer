@@ -1,4 +1,6 @@
 class BuzzerResponse
+  BUZZER_TZ = "Pacific Time (US & Canada)"
+
   attr_accessor :phone_number
 
   def initialize(phone_number)
@@ -27,7 +29,7 @@ class BuzzerResponse
   private
 
   def current_time
-    DateTime.now.new_offset("PDT").strftime("%-l:%M %P")
+    ActiveSupport::TimeZone.new(BUZZER_TZ).now.strftime("%-l:%M %P")
   end
 
   def default_response

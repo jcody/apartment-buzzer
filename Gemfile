@@ -6,6 +6,7 @@ gem 'twilio-ruby'
 gem 'unicorn'
 gem 'rake'
 gem 'dotenv'
+gem 'activesupport', '~> 6.0', '>= 6.0.1'
 
 group :development do
   gem 'thin'
