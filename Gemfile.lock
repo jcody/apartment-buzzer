@@ -8,7 +8,7 @@ GEM
     jwt (1.5.1)
     kgio (2.10.0)
     multi_json (1.11.2)
-    rack (1.6.11)
+    rack (1.6.13)
     rack-protection (1.5.5)
       rack
     raindrops (0.15.0)
