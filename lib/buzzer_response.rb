@@ -23,6 +23,10 @@ class BuzzerResponse
     ENV["TO_PHONE_NUMBER"]
   end
 
+  def homie_roomie_number
+    ENV["HOMIE_ROOMIE_NUMBER"]
+  end
+
   private
 
   def current_time
@@ -45,6 +49,7 @@ class BuzzerResponse
     <Response>
       <Say voice='man' language='en'></Say>
       <Sms from='#{caller_id_number}' to='#{resident_number}'>👋 #{who_dis} - [#{current_time}]</Sms>
+      <Sms from='#{caller_id_number}' to='#{homie_roomie_number}'>👋 #{who_dis} - [#{current_time}]</Sms>
       <Play digits='9'></Play>
       <Hangup/>
     </Response>
