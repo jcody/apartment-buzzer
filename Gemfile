@@ -6,6 +6,7 @@ gem 'twilio-ruby'
 gem 'unicorn'
 gem 'rake'
 gem 'dotenv'
+gem 'tzinfo'
 
 group :development do
   gem 'thin'

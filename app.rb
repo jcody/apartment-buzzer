@@ -12,11 +12,10 @@ require 'sinatra/base'
 
 module ApartmentBuzzer
   class App < Sinatra::Application
-
+    # Twilio incoming call webhook.
     get "/buzzer" do
-      puts "GET /buzzer request made."
-
       content_type "text/xml"
+
       BuzzerResponse.new(params[:phone_number]).generate
     end
   end
