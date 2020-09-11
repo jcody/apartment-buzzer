@@ -6,9 +6,11 @@ $: << File.expand_path('../', __FILE__)
 Dir[__dir__ + "/lib/*.rb"].each { |file| require file }
 
 require 'dotenv'
+require 'sinatra/base'
+
 Dotenv.load
 
-require 'sinatra/base'
+$redis = Redis.new
 
 module ApartmentBuzzer
   class App < Sinatra::Application
@@ -16,7 +18,23 @@ module ApartmentBuzzer
     get "/buzzer" do
       content_type "text/xml"
 
-      BuzzerResponse.new(params[:phone_number]).generate
+      buzzer_response.generate
+    end
+
+    # Incoming SMS messages.
+    post "/message" do
+      # Twilio SMS POST attributes: https://www.twilio.com/docs/api/twiml/sms/twilio_request#synchronous.
+      if params[:Body].match(/^.*(landlord|toggle|🎚).*$/)
+        buzzer_response.toggle_landlord
+      else
+        Twilio::TwiML::MessagingResponse.new.message("Wut 🤔")
+      end
+    end
+
+    private
+
+    def buzzer_response
+      @buzzer_response ||= BuzzerResponse.new(params[:phone_number])
     end
   end
 end

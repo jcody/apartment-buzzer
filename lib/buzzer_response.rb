@@ -12,6 +12,8 @@ class BuzzerResponse
   end
 
   def landlord_home?
+    return $redis.get(phone_number) if $redis.exists?(phone_number)
+
     ENV["LANDLORD_HOME"] == "true"
   end
 
@@ -19,12 +21,19 @@ class BuzzerResponse
     ENV["TWILIO_PHONE_NUMBER"]
   end
 
-  def resident_number
-    ENV["TO_PHONE_NUMBER"]
+  # Allows for CSV separate phone numbers (if multiple).
+  def resident_numbers
+    @resident_numbers ||= ENV["TO_PHONE_NUMBER"].split(",").each(&:strip!)
   end
 
   def homie_roomie_number
     ENV["HOMIE_ROOMIE_NUMBER"]
+  end
+
+  def toggle_landlord
+    landlord_home = $redis.get(phone_number) || false
+
+    $redis.set(!landlord_home)
   end
 
   private
@@ -48,12 +57,19 @@ class BuzzerResponse
     <<-EOS
     <Response>
       <Say voice='man' language='en'></Say>
-      <Sms from='#{caller_id_number}' to='#{resident_number}'>👋 #{who_dis} - [#{current_time}]</Sms>
-      <Sms from='#{caller_id_number}' to='#{homie_roomie_number}'>👋 #{who_dis} - [#{current_time}]</Sms>
+
       <Play digits='9'></Play>
       <Hangup/>
     </Response>
     EOS
+  end
+
+  def sms_greeting
+    resident_numbers.each do |number|
+      <<-GREETING
+        <Sms from='#{caller_id_number}' to='#{resident_number}'>👋 #{who_dis} - [#{current_time}]</Sms>
+      GREETING
+    end
   end
 
   def landlord_home_response
