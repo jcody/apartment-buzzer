@@ -24,10 +24,10 @@ module ApartmentBuzzer
     # Incoming SMS messages.
     post "/message" do
       # Twilio SMS POST attributes: https://www.twilio.com/docs/api/twiml/sms/twilio_request#synchronous.
-      if params[:Body].match(/^.*(landlord|toggle|🎚).*$/)
+      if params[:Body].match(/^.*(landlord|toggle|🎚|switch|yes|no).*$/i)
         buzzer_response.toggle_landlord
       else
-        Twilio::TwiML::MessagingResponse.new.message("Wut 🤔")
+        Twilio::TwiML::MessagingResponse.new.message(body: "Wut 🤔").to_s
       end
     end
 

@@ -17,13 +17,13 @@ class BuzzerResponse
     ENV["LANDLORD_HOME"] == "true"
   end
 
-  def caller_id_number
+  def from_number
     ENV["TWILIO_PHONE_NUMBER"]
   end
 
   # Allows for CSV separate phone numbers (if multiple).
-  def resident_numbers
-    @resident_numbers ||= ENV["TO_PHONE_NUMBER"].split(",").each(&:strip!)
+  def to_numbers
+    @to_numbers ||= ENV["TO_PHONE_NUMBER"].split(",").each(&:strip!)
   end
 
   def homie_roomie_number
@@ -31,9 +31,15 @@ class BuzzerResponse
   end
 
   def toggle_landlord
-    landlord_home = $redis.get(phone_number) || false
-
+    landlord_home = landlord_home?
     $redis.set(!landlord_home)
+
+    response = Twilio::TwiML::VoiceResponse.new
+    to_numbers.each do |n|
+      response.sms(to: n, from: from_number, message: "🆕 Updated auto-buzz: #{!landlord_home}.\n - (#{phone_number})")
+    end
+
+    response.to_s
   end
 
   private
@@ -51,32 +57,19 @@ class BuzzerResponse
   end
 
   # Press '9' to open front door at my aparment.
-  # Change this if yours is different. Can also `<Say></Say>` greetings to guests (check Twilio docs).
-  # My neighbors did not like the `<Say></Say>` ¯\_(ツ)_/¯.
   def default_response
-    <<-EOS
-    <Response>
-      <Say voice='man' language='en'></Say>
+    response = Twilio::TwiML::VoiceResponse.new
 
-      <Play digits='9'></Play>
-      <Hangup/>
-    </Response>
-    EOS
-  end
+    to_numbers.each { |n| response.sms(to: n, from: from_number, message: "👋 #{who_dis} - [#{current_time}]") }
+    response.play(digits: "9")
+    response.hangup
 
-  def sms_greeting
-    resident_numbers.each do |number|
-      <<-GREETING
-        <Sms from='#{caller_id_number}' to='#{resident_number}'>👋 #{who_dis} - [#{current_time}]</Sms>
-      GREETING
-    end
+    response.to_s
   end
 
   def landlord_home_response
-    <<-EOS
-    <Response>
-      <Dial callerId='#{caller_id_number}'>#{phone_number}</Dial>
-    </Response>
-    EOS
+    response = Twilio::TwiML::VoiceResponse.new do |r|
+      r.dial(caller_id: from_number, number: phone_number)
+    end
   end
 end
