@@ -10,7 +10,7 @@ require 'sinatra/base'
 
 Dotenv.load
 
-$redis = Redis.new
+$redis = Redis.new(url: ENV["REDIS_URL"])
 
 module ApartmentBuzzer
   class App < Sinatra::Application

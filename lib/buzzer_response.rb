@@ -12,7 +12,7 @@ class BuzzerResponse
   end
 
   def landlord_home?
-    return $redis.get(phone_number) if $redis.exists?(phone_number)
+    return $redis.get(from_number) if $redis.exists?(from_number)
 
     ENV["LANDLORD_HOME"] == "true"
   end
@@ -23,7 +23,7 @@ class BuzzerResponse
 
   # Allows for CSV separate phone numbers (if multiple).
   def to_numbers
-    @to_numbers ||= ENV["TO_PHONE_NUMBER"].split(",").each(&:strip!)
+    @to_numbers = ENV["TO_PHONE_NUMBER"].split(",").each(&:strip!)
   end
 
   def homie_roomie_number
@@ -32,7 +32,7 @@ class BuzzerResponse
 
   def toggle_landlord
     landlord_home = landlord_home?
-    $redis.set(!landlord_home)
+    $redis.set(from_number, !landlord_home)
 
     response = Twilio::TwiML::VoiceResponse.new
     to_numbers.each do |n|
@@ -71,7 +71,7 @@ class BuzzerResponse
   def default_response
     response = Twilio::TwiML::VoiceResponse.new
 
-    to_numbers.each { |n| response.sms(to: n, from: from_number, message: "👋 #{who_dis} - [#{current_time}]") }
+    to_numbers.each { |n| response.sms("👋 #{who_dis} - [#{current_time}]", to: n, from: from_number) }
     response.play(digits: "9")
     response.hangup
 
