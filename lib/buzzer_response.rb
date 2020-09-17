@@ -36,10 +36,21 @@ class BuzzerResponse
 
     response = Twilio::TwiML::VoiceResponse.new
     to_numbers.each do |n|
-      response.sms(to: n, from: from_number, message: "🆕 Updated auto-buzz: #{!landlord_home}.\n - (#{phone_number})")
+      response.sms(to: n, from: from_number, message: buzz_text(!landlord_home))
     end
 
     response.to_s
+  end
+
+  def buzz_text(l_home)
+    if l_home
+      "🆕 Updated auto-buzz: #{!landlord_home} 🆕\n\n" \
+      "Forwarding buzzer to #{to_numbers.first} \n\n" \
+      "(via #{phone_number})"
+    else
+      "🆕 Updated auto-buzz: #{!landlord_home} 🆕\n\n" \
+      "(via #{phone_number})"
+    end
   end
 
   private
@@ -69,7 +80,7 @@ class BuzzerResponse
 
   def landlord_home_response
     response = Twilio::TwiML::VoiceResponse.new do |r|
-      r.dial(caller_id: from_number, number: phone_number)
+      r.dial(caller_id: from_number, number: to_numbers.first)
     end
   end
 end
